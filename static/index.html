@@ -1,0 +1,81 @@
+<html>
+    <head></head>
+    <body>
+        <form id="form">
+            <p>id <input name="inpId" /></p>
+            <p>name <input name="inpName" /></p>
+            <p><input id="get" type="button" value="get" /></p>
+            <p><input id="post" type="button" value="post" /></p>
+            <p><input id="put" type="button" value="put" /></p>
+            <p><input id="del" type="button" value="del" /></p>
+        </form>
+
+        <script>
+        !function(){
+            var url = "/user"
+            var mimeType = "application/json";
+            var form = document.getElementById("form")
+
+            document.getElementById("get").addEventListener("click", get)
+            document.getElementById("post").addEventListener("click", post)
+            document.getElementById("put").addEventListener("click", put)
+            document.getElementById("del").addEventListener("click", del)
+
+
+
+            function formToUser() {
+                return {
+                    "id":  +form.inpId.value,
+                    "name": form.inpName.value,
+                }
+            }
+
+            function get() {
+                var xhr = new XMLHttpRequest()
+                var user = formToUser();
+                xhr.open('GET', url+ "?id="+user.id, true);  // true : asynchrone false: synchrone
+                xhr.onload = updateDate
+                xhr.setRequestHeader('Content-Type', mimeType);  
+                xhr.send() 
+            }
+
+            function post() {
+                var xhr = new XMLHttpRequest()
+                var user = formToUser();
+                xhr.open('POST', url, true);  // true : asynchrone false: synchrone
+                xhr.onload = updateDate
+                xhr.setRequestHeader('Content-Type', mimeType);  
+                xhr.send(JSON.stringify(user)) 
+            }
+
+            function put() {
+                var xhr = new XMLHttpRequest()
+                var user = formToUser();
+                xhr.open('PUT', url, true);  // true : asynchrone false: synchrone
+                xhr.onload = updateDate
+                xhr.setRequestHeader('Content-Type', mimeType);  
+                xhr.send(JSON.stringify(user))
+            }
+
+            function del() {
+                var xhr = new XMLHttpRequest()
+                var user = formToUser();
+                xhr.open('DELETE', url+ "?id="+user.id, true);  // true : asynchrone false: synchrone
+                xhr.send(JSON.stringify(user))
+            }
+
+
+            
+            function updateDate() {
+                var t = this.response;
+                if (!t) return;
+
+                user = JSON.parse(t)
+                form.inpId.value = user.id;
+                form.inpName.value = user.name;
+            }
+
+        }()
+        </script>
+    </body>
+</html>

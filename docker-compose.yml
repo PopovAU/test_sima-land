@@ -1,0 +1,28 @@
+version: '2'
+
+services:
+  api:
+    restart: always
+    build: .
+    links:
+      - db
+    ports:
+      - "9080:8080"
+    volumes:
+      - ./static:/static
+    environment:
+      APIStaticDir: /static
+      APIListenAddr: ":8080"
+      DBUser: root
+      DBPassword: example
+      DBHost: tcp(db:3306)
+      DBName: 
+
+  
+  db:
+    image: mysql
+    hostname: db
+    restart: always
+    environment:
+      MYSQL_DATABASE: db
+      MYSQL_ROOT_PASSWORD: example
